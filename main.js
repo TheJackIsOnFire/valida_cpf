@@ -20,106 +20,106 @@ Se o número digito for maior que 9, consideramos 0.
 */
 
 /*
-    1° - Criar um objeto que vai receber o cpf e exibir o seu valor(get)
+    1° - Criar um objeto que vai receber o cpf e exibir o seu valor (get)
 
-        - O obj vai receber uma str com caracteres especiais
+        - O objeto vai receber uma string com caracteres especiais
         - Retornar o valor sem os caracteres especiais
 */
 
 /*
     2° - Criar os protótipos 
 
-        - Criar uma função para verificar se o cpf é valido dentro dos protótipos
+        - Criar uma função para verificar se o cpf é válido dentro dos protótipos
         - Verificar se o valor não é undefined
-        - Verifica se é realmente um cpf com 11 numeros
-        - Filtrar os primeiros 9 digitos
+        - Verificar se é realmente um cpf com 11 números
+        - Filtrar os primeiros 9 dígitos
 
-        - O método de validdação está descrito acima
+        - O método de validação está descrito acima
         - Criar uma função para realizar o método
 
-        - Trasformar o cpf em um array
+        - Transformar o cpf em um array
 
-        - Crie uma variável para decrementar e realizar a multiplicação
+        - Criar uma variável para decrementar e realizar a multiplicação
             let decrement = cpf.length + 1
 
-        - Multiplicar os valores dos digitos do cpf 
-        - Usar o reducer para somar os valores(lembre-se que os valore são str então os converta para numbers)
+        - Multiplicar os valores dos dígitos do cpf 
+        - Usar o reducer para somar os valores (lembre-se que os valores são strings então os converta para numbers)
 
-        - Pegar a soma dos valores é realizar a seguinte conta:
+        - Pegar a soma dos valores e realizar a seguinte conta:
             - (11 - (soma dos valores % 11)) = ao penúltimo número
 
-            - Se o número digito for maior que 9, vamos retornar consideramos 0.          
+            - Se o número do dígito for maior que 9, vamos considerar 0.         
 
-            - O valore encontrado será do primeiro digito ou seja do penultimo numero do cpf
+            - O valor encontrado será do primeiro dígito ou seja do penúltimo número do cpf
 
-        - concatenar o penultimo digito ao número do cpf sem os 2 digitos
-        - Jogar o valor na função que realiza a conta para descobri o segundo digito (ou o ultimo número)
+        - Concatenar o penúltimo dígito ao número do cpf sem os 2 dígitos
+        - Jogar o valor na função que realiza a conta para descobrir o segundo dígito (ou o último número)
         
-        - comparar o número gerado com o número original
-            - se os valores forem iguais o cpf e valido 
+        - Comparar o número gerado com o número original
+            - se os valores forem iguais o cpf é válido 
 
 */
 
-//Função construtora
+// Função construtora
 const ValidateCpf = function (cpf) {
-	//Define as propriedades de justCpfNumbers
+	// Define as propriedades de justCpfNumbers
 	Object.defineProperty(this, 'justCpfNumbers', {
 		enumerable: true,
-		//Exibe apenas os numeros do cpf
+		// Exibe apenas os números do cpf
 		get: function () {
-			return cpf.replace(/\D+/g, ''); //(Essa expressão regular retira da str tudo que não representa números)
+			return cpf.replace(/\D+/g, ''); // (Essa expressão regular retira da string tudo que não representa números)
 		},
 	});
 };
 
-//Protótipos de ValidaCpf
+// Protótipos de ValidaCpf
 ValidateCpf.prototype.isValid = function () {
-	//Faz verificações antes de verificar se o cps é valido
+	// Faz verificações antes de verificar se o cpf é válido
 	if (typeof this.justCpfNumbers === 'undefined') return false;
 	if (this.justCpfNumbers.length !== 11) return false;
 	if (this.isSequence()) return false;
 
-	//Retira os dois últimos digitos do cpf
+	// Retira os dois últimos dígitos do cpf
 	const filterCpf = this.justCpfNumbers.slice(0, -2);
 
-	//Digitos
+	// Dígitos
 	const digit1 = this.validationMethod(filterCpf);
 	const digit2 = this.validationMethod(filterCpf + digit1);
 
-	//Cpf com os digitos verificadores
+	// Cpf com os dígitos verificadores
 	const newCpfCheck = filterCpf + digit1 + digit2;
 
 	return newCpfCheck === this.justCpfNumbers ? true : false;
 };
 
-//Método de validação
+// Método de validação
 ValidateCpf.prototype.validationMethod = function (filterCpf) {
-	//Transforma o cpf de uma str para um array
+	// Transforma o cpf de uma string para um array
 	const cpfArray = Array.from(filterCpf);
 
-	//Esta variavel será usada para multiplicar os valores do cpf
+	// Esta variável será usada para multiplicar os valores do cpf
 	let decrement = cpfArray.length + 1;
 
-	//Retorna a soma dos valores multiplicados pela variável decrement
+	// Retorna a soma dos valores multiplicados pela variável decrement
 	const totalMultiplication = cpfArray.reduce((accumulator, value) => {
 		accumulator += decrement * Number(value);
 		decrement--;
 		return accumulator;
 	}, 0);
 
-	//Retorna o digito verificador
+	// Retorna o dígito verificador
 	const checkDigit = 11 - (totalMultiplication % 11);
 
 	return checkDigit > 9 ? '0' : String(checkDigit);
 };
 
-//Verifica se o cpf é ou não uma sequência de números repetidos
+// Verifica se o cpf é ou não uma sequência de números repetidos
 ValidateCpf.prototype.isSequence = function () {
 	const sequence = this.justCpfNumbers[0].repeat(this.justCpfNumbers.length);
 	return sequence === this.justCpfNumbers;
 };
 
-//Instância
+// Instância
 // const cpfTest = new ValidateCpf('070.987.720-03');
 // console.log(cpfTest.justCpfNumbers);
 // console.log(cpfTest.isValid());
